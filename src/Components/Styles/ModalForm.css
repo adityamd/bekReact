@@ -1,0 +1,22 @@
+.container{
+    background-color: white;
+    width: 500px;
+    margin:auto;
+    padding:40px;
+}
+
+.inline_input_label {
+    display: inline;
+    margin-left: 20px;
+}
+
+.centeredButton{
+    width:100px;
+    margin:auto;
+    display:block;
+    margin-top:10px;
+}
+
+.inputGroup{
+    margin-top:20px;
+}

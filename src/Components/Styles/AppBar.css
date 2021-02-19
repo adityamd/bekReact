@@ -1,0 +1,7 @@
+.root {
+    flex-grow: 1
+}
+.title{
+    position: fixed;
+    left: 100px;
+}

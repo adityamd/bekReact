@@ -1,0 +1,8 @@
+.crd {
+    width:300px;
+    margin-top: 20px;
+    position:relative;
+}
+.crd-content {
+    background-color: #EEEEEE;
+}
