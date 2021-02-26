@@ -4,7 +4,6 @@ import axios from 'axios'
 import { Container,Button, Tab, Tabs,TextField,Typography } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
-import TabPanel from '@material-ui/lab/TabPanel';
 
 
 class LoginSignup extends React.Component {
@@ -61,7 +60,7 @@ class LoginSignup extends React.Component {
 
     loginButtonClicked(e){
         if(this.state.accountPresent){
-            if(this.state.tabValue=="Reader"){
+            if(this.state.tabValue==="Reader"){
                 axios.post(`https://bharatekkhoj.herokuapp.com/api/auth/login`,{
                     "username":this.state.unameReader,
                     "password":this.state.pwdReader
