@@ -100,7 +100,9 @@ class LoginSignup extends React.Component {
                     "username":this.state.unameReader,
                     "email":this.state.emailReader,
                     "password":this.state.pwdReader
-                }).then(
+                },{headers:{
+                    "Access-Control-Allow-Origin":"*"
+                }}).then(
                     res => {
                     axios.post(`https://bharatekkhoj.herokuapp.com/api/users/add`,{
                             "uname":this.state.unameReader,
