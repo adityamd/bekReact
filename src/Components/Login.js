@@ -78,11 +78,11 @@ class LoginSignup extends React.Component {
                     }).catch(() => alert("Login is Unsuccessful"));
             }
             else if(this.state.tabValue==="Publisher"){
-                axios.post(`http://bharatekkhoj.herokuapp.com/api/auth/login`,{
+                axios.post(`https://bharatekkhoj.herokuapp.com/api/auth/login`,{
                     "username":this.state.unamePublisher,
                     "password":this.state.pwdPublisher
                 }).then(res => 
-                    {   axios.get(`http://bharatekkhoj.herokuapp.com/api/users/reader/${this.state.unamePublisher}`).then(res => {
+                    {   axios.get(`https://bharatekkhoj.herokuapp.com/api/users/reader/${this.state.unamePublisher}`).then(res => {
                             console.log(res.data);
                             if(res.data === 0){
                                 alert("Login Successful");
@@ -112,12 +112,12 @@ class LoginSignup extends React.Component {
                     }).catch(() => alert("Registration Unsuccessful"));
             }
             else if(this.state.tabValue==="Publisher"){
-                axios.post(`http://bharatekkhoj.herokuapp.com/api/auth/register`,{
+                axios.post(`https://bharatekkhoj.herokuapp.com/api/auth/register`,{
                     "username":this.state.unamePublisher,
                     "email":this.state.emailPublisher,
                     "password":this.state.pwdPublisher
                 }).then( 
-                    res => {axios.post(`http://bharatekkhoj.herokuapp.com/api/users/add/`,{
+                    res => {axios.post(`https://bharatekkhoj.herokuapp.com/api/users/add/`,{
                             "uname":this.state.unamePublisher,
                             "passwd": this.state.pwdPublisher,
                             "Reader": false
