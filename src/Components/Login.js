@@ -102,7 +102,6 @@ class LoginSignup extends React.Component {
                     "password":this.state.pwdReader
                 }).then(
                     res => {
-                        console.log("HEH");
                     axios.post(`https://bharatekkhoj.herokuapp.com/api/users/add/`,{
                             "uname":this.state.unameReader,
                             "passwd": this.state.pwdReader,
