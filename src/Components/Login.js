@@ -18,6 +18,7 @@ class LoginSignup extends React.Component {
             pwdPublisher: "",
             emailReader: "",
             emailPublisher: "",
+            userExists:"",
             accountPresent: true
         });
         this.handleTabChange = this.handleTabChange.bind(this);
@@ -69,13 +70,20 @@ class LoginSignup extends React.Component {
                         axios.get(`https://bharatekkhoj.herokuapp.com/api/users/reader/${this.state.unameReader}/`).then(res => {
                             console.log(res.data)
                             if(res.data === 1){
+                                this.setState({
+                                    userExists: ""
+                                });
                                 alert("Login Successful");
                             }
                             else{
-                                alert("Login Unsuccessful");
+                                this.setState({
+                                    userExists: "Incorrect username/password"
+                                });
                             }
                         });
-                    }).catch(() => alert("Login is Unsuccessful"));
+                    }).catch(() => this.setState({
+                        userExists: "Incorrect username/password"
+                    }));
             }
             else if(this.state.tabValue==="Publisher"){
                 axios.post(`https://bharatekkhoj.herokuapp.com/api/auth/login`,{
@@ -85,13 +93,20 @@ class LoginSignup extends React.Component {
                     {   axios.get(`https://bharatekkhoj.herokuapp.com/api/users/reader/${this.state.unamePublisher}`).then(res => {
                             console.log(res.data);
                             if(res.data === 0){
+                                this.setState({
+                                    userExists: ""
+                                });
                                 alert("Login Successful");
                             }
                             else{
-                                alert("Login Unsuccessful");
+                                this.setState({
+                                    userExists: "Incorrect username/password"
+                                });
                             }
                         })
-                    }).catch(() =>  alert("Login Unsuccessful"));
+                    }).catch(() => this.setState({
+                        userExists: "Incorrect username/password"
+                    }));
             }
         }
 
@@ -107,9 +122,18 @@ class LoginSignup extends React.Component {
                             "uname":this.state.unameReader,
                             "passwd": this.state.pwdReader,
                             "Reader": true
-                        }).then(alert("User Registered")).catch(()=>alert("User Not registered"))
+                        }).then(res => {
+                                this.setState({
+                                    userExists: ""
+                                });
+                                alert("User Registered")
+                            }).catch(() => this.setState({
+                            userExists: "The user could not be registered"
+                        }))
                         
-                    }).catch(() => alert("Registration Unsuccessful"));
+                    }).catch(() => this.setState({
+                        userExists: "The user already axists"
+                    }));
             }
             else if(this.state.tabValue==="Publisher"){
                 axios.post(`https://bharatekkhoj.herokuapp.com/api/auth/register`,{
@@ -121,8 +145,17 @@ class LoginSignup extends React.Component {
                             "uname":this.state.unamePublisher,
                             "passwd": this.state.pwdPublisher,
                             "Reader": false
-                        }).then(alert("User Registered")).catch(()=>alert("User Not registered"))                        
-                    }).catch(() => alert("Registration Unsuccessful"));
+                        }).then(res => {
+                                this.setState({
+                                    userExists: ""
+                                });
+                                alert("User Registered")
+                        }).catch(() => this.setState({
+                            userExists: "The user could not be registered"
+                        }))                        
+                    }).catch(() => this.setState({
+                        userExists: "The user already axists"
+                    }));
             }
         }
 
@@ -208,6 +241,9 @@ class LoginSignup extends React.Component {
                                 <Button color="primary" variant="contained" onClick={this.loginButtonClicked}>
                                     {(this.state.accountPresent) ? "Login" : "Register"}
                                 </Button>
+                                <Typography variant="body2" color="secondary" style={{ marginTop: 10 }}>
+                                    {this.state.userExists}
+                                </Typography>
                             </div>
                         )
                     }
@@ -234,6 +270,9 @@ class LoginSignup extends React.Component {
                                 <Button color="primary" variant="contained" onClick={this.loginButtonClicked}>
                                     {(this.state.accountPresent) ? "Login" : "Register"}
                                 </Button>
+                                <Typography variant="body2" color="secondary" style={{ marginTop: 10 }}>
+                                    {this.state.userExists}
+                                </Typography>
                             </div>
                         )
                     }
