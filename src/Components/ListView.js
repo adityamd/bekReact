@@ -13,7 +13,7 @@ class ListView extends React.Component {
     }
 
     componentDidMount() {
-        axios.get(`http://127.0.0.1:8000/api/warehouses/`).then(res => {
+        axios.get(`http://bharatekkhoj.herokuapp.com/api/warehouses/`).then(res => {
             this.setState({
                 list: res.data.map(warehouse => { return warehouse["location"]})
             });
@@ -22,7 +22,7 @@ class ListView extends React.Component {
 
     onSubmit(e) {
         e.preventDefault();
-        axios.post(`http://127.0.0.1:8000/api/warehouses/add/`,
+        axios.post(`http://bharatekkhoj.herokuapp.com/api/warehouses/add/`,
             { location: this.state.name }).
             then(res => { console.log(res); });
     }

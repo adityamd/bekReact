@@ -40,12 +40,12 @@ class User extends React.Component {
     componentDidMount() {
         var publishes = [];
 
-        axios.get(`http://127.0.0.1:8000/api/subscribes/${this.state.username}`).then(res => {
+        axios.get(`http://bharatekkhoj.herokuapp.com/api/subscribes/${this.state.username}`).then(res => {
             this.setState({
                 subscribers: res.data
             });
             for (let i = 0; i < this.state.subscribers.length; i++) {
-                axios.get(`http://127.0.0.1:8000/api/books/pubs/${this.state.subscribers[i].pub_name}`).then(
+                axios.get(`http://bharatekkhoj.herokuapp.com/api/books/pubs/i/${this.state.subscribers[i].publisher}`).then(
                     res => {
                         publishes = publishes.concat(res.data);
                         console.log(publishes);
@@ -58,7 +58,7 @@ class User extends React.Component {
             }
         })
 
-        axios.get(`http://127.0.0.1:8000/api/purchases/${this.state.username}/`).then(res => {
+        axios.get(`http://bharatekkhoj.herokuapp.com/api/purchases/${this.state.username}/`).then(res => {
             this.setState({
                 booksSubscribed: res.data
             });
@@ -81,7 +81,7 @@ class User extends React.Component {
 
     postReview(e) {
         var d = new Date();
-        axios.post(`http://127.0.0.1:8000/api/reviews/add/`, {
+        axios.post(`http://bharatekkhoj.herokuapp.com/api/reviews/add/`, {
             user: this.state.username,
             book: this.state.bookReviewed,
             review: this.state.reviewValue,

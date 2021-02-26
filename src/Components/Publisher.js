@@ -48,7 +48,7 @@ class Publisher extends React.Component {
     }
 
     componentDidMount() {
-        axios.get(`http://127.0.0.1:8000/api/books/pubs/${this.state.publisher}`).then(res => {
+        axios.get(`http://bharatekkhoj.herokuapp.com/api/books/pubs/${this.state.publisher}`).then(res => {
             this.setState({
                 publishes: res.data,
                 loaded: true,
@@ -79,7 +79,7 @@ class Publisher extends React.Component {
 
     loadAgain() {
         console.log(this.state.publisher);
-        axios.get(`http://127.0.0.1:8000/api/books/pubs/${this.state.publisher}`).then(res => {
+        axios.get(`http://bharatekkhoj.herokuapp.com/api/books/pubs/${this.state.publisher}`).then(res => {
             this.setState({
                 publishes: res.data,
             });
@@ -101,11 +101,11 @@ class Publisher extends React.Component {
 
     deletePublication(e, name) {
         console.log(this.state.book_name);
-        axios.get(`http://127.0.0.1:8000/api/books/delete/${this.state.book_name}`).then(res => { console.log(res); });
+        axios.get(`http://bharatekkhoj.herokuapp.com/api/books/delete/${this.state.book_name}`).then(res => { console.log(res); });
         this.setState({
             openDialog: false
         });
-        axios.get(`http://127.0.0.1:8000/api/books/pubs/${this.state.publisher}`).then(res => {
+        axios.get(`http://bharatekkhoj.herokuapp.com/api/books/pubs/${this.state.publisher}`).then(res => {
             this.setState({
                 publishes: res.data,
             });

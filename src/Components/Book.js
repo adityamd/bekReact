@@ -49,7 +49,7 @@ class Book extends React.Component {
     }
 
     componentDidMount() {
-        axios.get(`http://127.0.0.1:8000/api/reviews/${this.state.book_name}/`).then(res => {
+        axios.get(`http://bharatekkhoj.herokuapp.com/api/reviews/${this.state.book_name}/`).then(res => {
             this.setState({
                 reviews: res.data
             });
@@ -63,20 +63,20 @@ class Book extends React.Component {
     }
 
     addSubscription() {
-        axios.post(`http://127.0.0.1:8000/api/subscribes/add/publisher/`, {
-            user: this.state.user,
+        axios.post(`http://bharatekkhoj.herokuapp.com/api/subscribes/add/publisher/`, {
+            users: this.state.user,
             publisher: this.state.publisher
         }).then(res => { console.log(res); });
     }
 
     deleteSubscription() {
-        axios.get(`http://127.0.0.1:8000/api/subscribes/delete/${this.state.user}/${this.state.publisher}/`).then(
+        axios.get(`http://bharatekkhoj.herokuapp.com/api/subscribes/delete/${this.state.user}/${this.state.publisher}/`).then(
             res => { console.log(res);}
         );
     }
 
     purchaseBook(e) {
-        axios.post(`http://127.0.0.1:8000/api/purchases/add/`, {
+        axios.post(`http://bharatekkhoj.herokuapp.com/api/purchases/added/p`, {
             user: this.state.user,
             book: this.state.book_name
         }).then(res => {
@@ -89,7 +89,7 @@ class Book extends React.Component {
 
     postReview(e) {
         var d = new Date();
-        axios.post(`http://127.0.0.1:8000/api/reviews/add/`,{
+        axios.post(`http://bharatekkhoj.herokuapp.com/api/reviews/add/`,{
             user:  this.state.user ,
             book: this.state.book_name,
             review: this.state.reviewValue,
@@ -101,7 +101,7 @@ class Book extends React.Component {
             posted: true
         });
 
-        axios.get(`http://127.0.0.1:8000/api/reviews/${this.state.book_name}/`).then(res => {
+        axios.get(`http://bharatekkhoj.herokuapp.com/api/reviews/${this.state.book_name}/`).then(res => {
             this.setState({
                 reviews: res.data
             });

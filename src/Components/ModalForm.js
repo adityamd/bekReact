@@ -60,7 +60,7 @@ class ModalForm extends React.Component {
     onSubmit(e) {
         if (this.props.canUpdate) {
             console.log(this.state.book_name+" " + this.props.book_name);
-            axios.post(`http://127.0.0.1:8000/api/books/update/${this.props.book_name}`, {
+            axios.post(`http://bharatekkhoj.herokuapp.com/api/books/update/${this.props.book_name}`, {
                 bname: this.state.book_name,
                 price: this.state.price,
                 genre: this.state.genre,
@@ -70,7 +70,7 @@ class ModalForm extends React.Component {
                 .then(res => { console.log(res); });
         }
         else {
-            axios.post(`http://127.0.0.1:8000/api/books/add/${this.state.publisher}`, {
+            axios.post(`http://bharatekkhoj.herokuapp.com/api/books/add/${this.state.publisher}`, {
                 bname: this.state.book_name,
                 price: this.state.price,
                 genre: this.state.genre,
