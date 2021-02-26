@@ -104,11 +104,14 @@ class LoginSignup extends React.Component {
                     "Access-Control-Allow-Origin":"*"
                 }}).then(
                     res => {
+                        console.log("HEREE");
                     axios.post(`https://bharatekkhoj.herokuapp.com/api/users/add`,{
                             "uname":this.state.unameReader,
                             "passwd": this.state.pwdReader,
                             "Reader": true
-                        }).then(alert("User Registered")).catch(()=>alert("User Not registered"))
+                        },{headers:{
+                            "Access-Control-Allow-Origin":"*"
+                        }}).then(alert("User Registered")).catch(()=>alert("User Not registered"))
                         
                     }).catch(() => alert("Registration Unsuccessful"));
             }
