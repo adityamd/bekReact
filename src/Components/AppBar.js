@@ -15,7 +15,7 @@ import './Styles/AppBar.css'
 class DefaultAppBar extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
+        this.state = { 
             heading: this.props.heading,
             menuState: false,
             MenuAnchor: null,
