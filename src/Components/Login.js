@@ -96,7 +96,7 @@ class LoginSignup extends React.Component {
 
         else{
             if(this.state.tabValue==="Reader"){
-                axios.post(`http://bharatekkhoj.herokuapp.com/api/auth/register`,{
+                axios.post(`https://bharatekkhoj.herokuapp.com/api/auth/register`,{
                     "username":this.state.unameReader,
                     "email":this.state.emailReader,
                     "password":this.state.pwdReader
@@ -105,7 +105,7 @@ class LoginSignup extends React.Component {
                 }}).then(
                     res => {
                         console.log("HEH");
-                    axios.post(`http://bharatekkhoj.herokuapp.com/api/users/add/`,{
+                    axios.post(`https://bharatekkhoj.herokuapp.com/api/users/add/`,{
                             "uname":this.state.unameReader,
                             "passwd": this.state.pwdReader,
                             "Reader": true
