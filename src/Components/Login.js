@@ -96,7 +96,7 @@ class LoginSignup extends React.Component {
 
         else{
             if(this.state.tabValue==="Reader"){
-                axios.post(`https://bharatekkhoj.herokuapp.com/api/auth/register`,{
+                axios.post(`http://127.0.0.1:8000/api/auth/register`,{
                     "username":this.state.unameReader,
                     "email":this.state.emailReader,
                     "password":this.state.pwdReader
@@ -104,8 +104,8 @@ class LoginSignup extends React.Component {
                     "Access-Control-Allow-Origin":"*"
                 }}).then(
                     res => {
-                        console.log("HEREE");
-                    axios.post(`https://bharatekkhoj.herokuapp.com/api/users/add`,{
+                        console.log("HEH");
+                    axios.post(`http://127.0.0.1:8000/api/users/add/`,{
                             "uname":this.state.unameReader,
                             "passwd": this.state.pwdReader,
                             "Reader": true
