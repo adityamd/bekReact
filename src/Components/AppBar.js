@@ -6,6 +6,8 @@ import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import PersonOutlineTwoToneIcon from '@material-ui/icons/PersonOutlineTwoTone';
+import Cookies from 'universal-cookie';
+import axios from "axios";
 
 import './Styles/AppBar.css'
 
@@ -24,7 +26,14 @@ class DefaultAppBar extends React.Component {
     }
 
     logout(e){
-        
+        let cookie = new Cookies();
+        let s= cookie.get("AuthToken");
+        axios.get('https://bharatekkhoj.herokuapp.com/api/auth/logout',{
+            headers:{
+                "Authorization": "Token "+s
+            }
+        }).then(res => {console.log(res)});
+        cookie.remove("AuthToken");
     }
 
     profileClosed(e) {
