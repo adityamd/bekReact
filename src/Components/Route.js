@@ -40,14 +40,17 @@ class Routing extends React.Component{
             return false;
         console.log(cookie.get("AuthToken"));
         let s = cookie.get("AuthToken");
+        let p=0;
         axios.get('https://bharatekkhoj.herokuapp.com/api/auth/user',{
             headers:{
                 "Authorization":"Token " + s
             }
         }).then(res => {
-            console.log(res);
-            return true;
-        }).catch(res=>{return false});
+            p=res.data
+        }).catch();
+        if(p===0)
+            return false;
+        return true;
     }
 
     isPublisher(){
@@ -73,7 +76,7 @@ class Routing extends React.Component{
                     </Route>
                     <Route exact path='/user/:id'>
                         {
-                            this.LoginCheck()?(<User uname={this.state.username} />):
+                            (this.LoginCheck())?(<User uname={this.state.username} />):
                                 (
                                     <p>{this.state.username}</p>)
                         }
