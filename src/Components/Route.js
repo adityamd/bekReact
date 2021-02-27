@@ -38,7 +38,7 @@ class Routing extends React.Component{
         let cookie=new Cookies();
         console.log(cookie.get("AuthToken"));
         let s = cookie.get("AuthToken");
-        axios.get('https://bharatekkhoh.herokuapp.com/api/auth/user',{
+        axios.get('https://bharatekkhoj.herokuapp.com/api/auth/user',{
             headers:{
                 "Authorization":"Token " + s
             }
