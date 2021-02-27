@@ -49,7 +49,7 @@ class Routing extends React.Component{
     }
 
     isPublisher(){
-        axios.get(`https://bharatekkhoh.herokuapp.com/api/users/reader/${this.state.username}/`).then(res=>{
+        axios.get(`https://bharatekkhoj.herokuapp.com/api/users/reader/${this.state.username}/`).then(res=>{
             if(res.data===1)
                 return false;
             return true;
