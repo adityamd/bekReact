@@ -73,7 +73,7 @@ class Routing extends React.Component{
                     </Route>
                     <Route exact path='/user/:id'>
                         {
-                            this.LoginCheck()?<User uname={this.state.username}/>:
+                            this.LoginCheck()?(console.log("H"))):
                             <Redirect to='/login' />
                         }
                     </Route>
