@@ -47,8 +47,8 @@ class Routing extends React.Component{
         }).then(res => {
             console.log(res);
             return true;
+            console.log("E");
         }).catch(res=>{return false});
-        console.log("E");
     }
 
     isPublisher(){
