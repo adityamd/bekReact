@@ -48,8 +48,10 @@ class Routing extends React.Component{
         }).then(res => {
             p=res.data
         }).catch();
-        if(p===0)
+        if(p===0){
+            console.log("HERE");
             return false;
+        }
         return true;
     }
 
