@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import {Switch, Route, Redirect} from "react-router-dom";
+import {Switch, Route, Redirect, Router} from "react-router-dom";
 import Cookies from "universal-cookie";
 
 import Publisher from './Publisher'
@@ -60,35 +60,37 @@ class Routing extends React.Component{
 
     render(){
         return (
-            <Switch>
-            <Route exact path='/'>
-                {
-                    this.LoginCheck()?(this.isPublisher?<User uname={this.state.username}/>:<Publisher uname={this.state.username} />):
-                    <Redirect to='/login' />
-                }
-            </Route>
-            <Route exact path='/login'>
-                <Login targetUsername={this.changeUsername} />
-            </Route>
-            <Route exact path='/user/:id'>
-                {
-                    this.LoginCheck()?<User uname={this.state.username}/>:
-                    <Redirect to='/login' />
-                }
-            </Route>
-            <Route exact path='/book/:id'>
-            {
-                    this.LoginCheck()?<Book />:
-                    <Redirect to='/login' />
-                }
-            </Route>
-            <Route exact path='/publisher/:id'>
-            {
-                    this.LoginCheck()?<Publisher uname={this.state.username}/>:
-                    <Redirect to='/login' />
-                }
-            </Route>
-            </Switch>
+            <Router>
+                <Switch>
+                    <Route exact path='/'>
+                        {
+                            this.LoginCheck()?(this.isPublisher?<User uname={this.state.username}/>:<Publisher uname={this.state.username} />):
+                            <Redirect to='/login' />
+                        }
+                    </Route>
+                    <Route exact path='/login'>
+                        <Login targetUsername={this.changeUsername} />
+                    </Route>
+                    <Route exact path='/user/:id'>
+                        {
+                            this.LoginCheck()?<User uname={this.state.username}/>:
+                            <Redirect to='/login' />
+                        }
+                    </Route>
+                    <Route exact path='/book/:id'>
+                    {
+                            this.LoginCheck()?<Book />:
+                            <Redirect to='/login' />
+                        }
+                    </Route>
+                    <Route exact path='/publisher/:id'>
+                    {
+                            this.LoginCheck()?<Publisher uname={this.state.username}/>:
+                            <Redirect to='/login' />
+                        }
+                    </Route>
+                </Switch>
+            </Router>
         );
     }
 }
