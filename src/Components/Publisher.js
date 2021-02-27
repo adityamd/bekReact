@@ -18,7 +18,6 @@ import CloseIcon from '@material-ui/icons/Close';
 
 import SimpleCard from './BookCard'
 import './Styles/Publisher.css'
-import DefaultAppBar from './AppBar'
 import ModalForm from './ModalForm'
 import Layout from './Layout'
 
@@ -27,7 +26,7 @@ class Publisher extends React.Component {
         super(props);
         this.state = {
             loaded: false,
-            publisher: "S.Chand",
+            publisher: this.props.uname,
             loadModal: false,
             publishes: [],
             book_name: "",

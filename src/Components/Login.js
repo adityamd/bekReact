@@ -1,5 +1,7 @@
 import React from 'react'
 import axios from 'axios'
+import {BrowserRouter as Router, Redirect} from "react-router-dom"
+import Cookies from "universal-cookie";
 
 import { Container,Button, Tab, Tabs,TextField,Typography } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar'
@@ -9,7 +11,6 @@ import Toolbar from '@material-ui/core/Toolbar'
 class LoginSignup extends React.Component {
     constructor(props) {
         super(props);
-
         this.state = ({
             tabValue: "Reader",
             unameReader: "",
@@ -19,6 +20,7 @@ class LoginSignup extends React.Component {
             emailReader: "",
             emailPublisher: "",
             userExists:"",
+            isLogged: false,
             accountPresent: true
         });
         this.handleTabChange = this.handleTabChange.bind(this);
@@ -62,18 +64,23 @@ class LoginSignup extends React.Component {
     loginButtonClicked(e){
         if(this.state.accountPresent){
             if(this.state.tabValue==="Reader"){
+                this.setState({
+                    userExists: ""
+                });
                 axios.post(`https://bharatekkhoj.herokuapp.com/api/auth/login`,{
                     "username":this.state.unameReader,
                     "password":this.state.pwdReader
                 }).then(res => 
                     {   
+                        let at = res.data['token']
                         axios.get(`https://bharatekkhoj.herokuapp.com/api/users/reader/${this.state.unameReader}/`).then(res => {
-                            console.log(res.data)
                             if(res.data === 1){
+                                let cookie = new Cookies();
+                                cookie.set("AuthToken",at);
+                                this.props.targetUsername(this.state.unameReader);
                                 this.setState({
-                                    userExists: ""
+                                    isLogged: true
                                 });
-                                alert("Login Successful");
                             }
                             else{
                                 this.setState({
@@ -86,17 +93,21 @@ class LoginSignup extends React.Component {
                     }));
             }
             else if(this.state.tabValue==="Publisher"){
+                this.setState({
+                    userExists: ""
+                });
                 axios.post(`https://bharatekkhoj.herokuapp.com/api/auth/login`,{
                     "username":this.state.unamePublisher,
                     "password":this.state.pwdPublisher
                 }).then(res => 
                     {   axios.get(`https://bharatekkhoj.herokuapp.com/api/users/reader/${this.state.unamePublisher}`).then(res => {
                             console.log(res.data);
+                            this.props.targetUsername(this.state.unamePublisher);
                             if(res.data === 0){
                                 this.setState({
-                                    userExists: ""
+                                    userExists: "logged in",
+                                    isLogged: true
                                 });
-                                alert("Login Successful");
                             }
                             else{
                                 this.setState({
@@ -112,6 +123,9 @@ class LoginSignup extends React.Component {
 
         else{
             if(this.state.tabValue==="Reader"){
+                this.setState({
+                    userExists: ""
+                });
                 axios.post(`https://bharatekkhoj.herokuapp.com/api/auth/register`,{
                     "username":this.state.unameReader,
                     "email":this.state.emailReader,
@@ -126,7 +140,6 @@ class LoginSignup extends React.Component {
                                 this.setState({
                                     userExists: ""
                                 });
-                                alert("User Registered")
                             }).catch(() => this.setState({
                             userExists: "The user could not be registered"
                         }))
@@ -136,6 +149,9 @@ class LoginSignup extends React.Component {
                     }));
             }
             else if(this.state.tabValue==="Publisher"){
+                this.setState({
+                    userExists: ""
+                });
                 axios.post(`https://bharatekkhoj.herokuapp.com/api/auth/register`,{
                     "username":this.state.unamePublisher,
                     "email":this.state.emailPublisher,
@@ -200,9 +216,12 @@ class LoginSignup extends React.Component {
 
     render() {
         return (
+                (this.state.isLogged)?((this.state.tabValue==="Reader")?(
+                    <Redirect to={"/user/"+this.state.unameReader} />
+                ):(<Redirect to={'/publisher/'+this.state.unamePublisher} />)):(
+            <Router>
             <div>
                 <Container style={{ padding: 100, margin: 100 }}>
-
                     <AppBar position="fixed">
                         <Toolbar>
                             <Typography variant="h5" className="title">
@@ -239,7 +258,7 @@ class LoginSignup extends React.Component {
                                     Note: {(this.state.accountPresent) ? "Signing in" : "Registering"} as Reader
                                 </Typography>
                                 <Button color="primary" variant="contained" onClick={this.loginButtonClicked}>
-                                    {(this.state.accountPresent) ? "Login" : "Register"}
+                                        {(this.state.accountPresent) ? "Login" : "Register"}
                                 </Button>
                                 <Typography variant="body2" color="secondary" style={{ marginTop: 10 }}>
                                     {this.state.userExists}
@@ -278,7 +297,8 @@ class LoginSignup extends React.Component {
                     }
                 </Container>
             </div>
-        );
+            </Router>
+        ));
     }
 }
 

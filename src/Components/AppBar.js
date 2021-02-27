@@ -20,6 +20,11 @@ class DefaultAppBar extends React.Component {
         };
         this.profileClicked = this.profileClicked.bind(this);
         this.profileClosed = this.profileClosed.bind(this);
+        this.logout = this.logout.bind(this);
+    }
+
+    logout(e){
+        
     }
 
     profileClosed(e) {
@@ -56,7 +61,7 @@ class DefaultAppBar extends React.Component {
                             anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
                             transformOrigin={{ vertical: "top", horizontal: "center" }}
                         >
-                            <MenuItem>Logout</MenuItem>
+                            <MenuItem onClick={this.logout}>Logout</MenuItem>
                         </Menu>
                     </Toolbar>
                 </AppBar>

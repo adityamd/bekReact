@@ -3,6 +3,7 @@ import axios from 'axios'
 
 import Layout from './Layout'
 import SimpleCard from './BookCard'
+import {Link} from "react-router-dom";
 
 import Accordion from '@material-ui/core/Accordion'
 import AccordionSummary from '@material-ui/core/AccordionSummary'
@@ -21,7 +22,7 @@ class User extends React.Component {
     constructor(props) {
         super(props);
         this.state = ({
-            username: "adityamd",
+            username: this.props.uname,
             subscribers: [],
             booksPublishers: [],
             booksSubscribed: [],
@@ -38,15 +39,15 @@ class User extends React.Component {
     }
 
     componentDidMount() {
-        var publishes = [];
-
-        axios.get(`http://bharatekkhoj.herokuapp.com/api/subscribes/${this.state.username}`).then(res => {
+        console.log(this.state.username);
+        axios.get(`https://bharatekkhoj.herokuapp.com/api/subscribes/${this.state.username}`).then(res => {
             this.setState({
                 subscribers: res.data
             });
             for (let i = 0; i < this.state.subscribers.length; i++) {
-                axios.get(`http://bharatekkhoj.herokuapp.com/api/books/pubs/i/${this.state.subscribers[i].publisher}`).then(
+                axios.get(`https://bharatekkhoj.herokuapp.com/api/books/pubs/i/${this.state.subscribers[i].publisher}`).then(
                     res => {
+                        var publishes=[];
                         publishes = publishes.concat(res.data);
                         console.log(publishes);
                         this.setState({
@@ -58,7 +59,7 @@ class User extends React.Component {
             }
         })
 
-        axios.get(`http://bharatekkhoj.herokuapp.com/api/purchases/${this.state.username}/`).then(res => {
+        axios.get(`https://bharatekkhoj.herokuapp.com/api/purchases/${this.state.username}/`).then(res => {
             this.setState({
                 booksSubscribed: res.data
             });
@@ -81,7 +82,7 @@ class User extends React.Component {
 
     postReview(e) {
         var d = new Date();
-        axios.post(`http://bharatekkhoj.herokuapp.com/api/reviews/add/`, {
+        axios.post(`https://bharatekkhoj.herokuapp.com/api/reviews/add/`, {
             user: this.state.username,
             book: this.state.bookReviewed,
             review: this.state.reviewValue,
@@ -148,9 +149,11 @@ class User extends React.Component {
                                                             <br />
                                                             Language: {publish.lang}
                                                         </Typography>
-                                                        <Button color="primary" style={{ marginTop: 20 }} variant="contained">
-                                                            View
-                                                        </Button>
+                                                        <Link to={"/book/" + publish.bname} >
+                                                            <Button color="primary" style={{ marginTop: 20 }} variant="contained">
+                                                                View
+                                                            </Button>
+                                                        </Link>
                                                     </SimpleCard>
                                                 </Grid>
                                             );

@@ -1,15 +1,14 @@
 import './App.css';
-// import Publisher from './Components/Publisher'
-// import User from './Components/User'
-// import Book from './Components/Book'
-import Login from './Components/Login'
-
+import Routing from './Components/Route'
+import {BrowserRouter as Router} from "react-router-dom";
 
 function App() {
   return (
+    <Router>
       <div className="App">
-          <Login />
+        <Routing />
      </div>
+     </Router>
   );
 }
 

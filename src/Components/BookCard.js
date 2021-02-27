@@ -1,8 +1,6 @@
 import React from 'react';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
-import CardActions from '@material-ui/core/CardActions';
 import Tooltip from '@material-ui/core/Tooltip';
 
 import './Styles/BookCard.css'

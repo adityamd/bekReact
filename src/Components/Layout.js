@@ -1,15 +1,10 @@
 import React from 'react'
 
 import Typography from '@material-ui/core/Typography'
-import Container from '@material-ui/core/Container'
 
 import DefaultAppBar from './AppBar'
 
 class Layout extends React.Component {
-    constructor(props) {
-        super(props);
-        
-    }
 
     render() {
         return (
