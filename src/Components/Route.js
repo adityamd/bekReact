@@ -41,13 +41,11 @@ class Routing extends React.Component{
             return false;
         console.log(cookie.get("AuthToken"));
         let s = cookie.get("AuthToken");
-        let p=0;
         axios.get('https://bharatekkhoj.herokuapp.com/api/auth/user',{
             headers:{
                 "Authorization":"Token " + s
             }
         }).then(res => {
-            p=res.data
             this.setState({
                 child: obj
             })
