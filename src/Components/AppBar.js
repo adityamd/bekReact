@@ -28,7 +28,7 @@ class DefaultAppBar extends React.Component {
     logout(e){
         let cookie = new Cookies();
         let s= cookie.get("AuthToken");
-        axios.get('https://bharatekkhoj.herokuapp.com/api/auth/logout',{
+        axios.post('https://bharatekkhoj.herokuapp.com/api/auth/logout',{},{
             headers:{
                 "Authorization": "Token "+s
             }
