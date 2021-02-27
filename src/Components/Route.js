@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import {Switch, Route, Redirect, BrowserRouter as Router} from "react-router-dom";
+import {Switch, Route, BrowserRouter as Router} from "react-router-dom";
 import Cookies from "universal-cookie";
 
 import Publisher from './Publisher'
@@ -14,6 +14,7 @@ class Routing extends React.Component{
         this.state= {
             username: "",
             loggedIn: false,
+            child: null
         }
         this.changeUsername = this.changeUsername.bind(this);
     }
@@ -34,7 +35,7 @@ class Routing extends React.Component{
         });
     }
 
-    LoginCheck(){
+    LoginCheck(obj){
         let cookie=new Cookies();
         if(cookie.get("AuthToken")===undefined)
             return false;
@@ -47,13 +48,12 @@ class Routing extends React.Component{
             }
         }).then(res => {
             p=res.data
-            console.log(p);
-        }).catch();
-        if(p===0){
-            console.log("HERE");
-            return false;
-        }
-        return true;
+            this.setState({
+                child: obj
+            })
+        }).catch(this.setState({
+            child: <Login targetUsername={this.changeUsername} />
+        }));
     }
 
     isPublisher(){
@@ -70,8 +70,7 @@ class Routing extends React.Component{
                 <Switch>
                     <Route exact path='/'>
                         {
-                            this.LoginCheck()?(this.isPublisher?<User uname={this.state.username}/>:<Publisher uname={this.state.username} />):
-                            <Redirect to='/login' />
+                            this.LoginCheck((this.isPublisher()?<Publisher uname={this.state.username} />:<User uname={this.state.username} />))
                         }
                     </Route>
                     <Route exact path='/login'>
@@ -79,21 +78,17 @@ class Routing extends React.Component{
                     </Route>
                     <Route exact path='/user/:id'>
                         {
-                            (this.LoginCheck())?(<User uname={this.state.username} />):
-                                (
-                                    <p>{this.state.username}</p>)
+                            this.LoginCheck(<User uname={this.state.username} />)
                         }
                     </Route>
                     <Route exact path='/book/:id'>
                     {
-                            this.LoginCheck()?<Book />:
-                            <Redirect to='/login' />
+                            this.LoginCheck(<Book />)
                         }
                     </Route>
                     <Route exact path='/publisher/:id'>
                     {
-                            this.LoginCheck()?<Publisher uname={this.state.username}/>:
-                            <Redirect to='/login' />
+                            this.LoginCheck(<Publisher uname={this.state.username} />)
                         }
                     </Route>
                 </Switch>
