@@ -48,9 +48,23 @@ class Routing extends React.Component{
         }).catch(res=>{return false});
     }
 
+    isPublisher(){
+        axios.get(`https://bharatekkhoh.herokuapp.com/api/users/reader/${this.state.username}/`).then(res=>{
+            if(res.data===1)
+                return false;
+            return true;
+        })
+    }
+
     render(){
         return (
             <Switch>
+            <Route exact path='/'>
+                {
+                    this.LoginCheck()?(this.isPublisher?<User uname={this.state.username}/>:<Publisher uname={this.state.username} />):
+                    <Redirect to='/login' />
+                }
+            </Route>
             <Route exact path='/login'>
                 <Login targetUsername={this.changeUsername} />
             </Route>
