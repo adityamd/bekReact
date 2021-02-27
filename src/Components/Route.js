@@ -62,27 +62,21 @@ class Routing extends React.Component{
         return (
             <Router>
                 <Switch>
-                    <Route exact path='/'>
-                        {
-                            this.LoginCheck()?(this.isPublisher?<User uname={this.state.username}/>:<Publisher uname={this.state.username} />):
-                            <Redirect to='/login' />
-                        }
-                    </Route>
-                    <Route exact path='/login'>
+                    <Route path='/login'>
                         <Login targetUsername={this.changeUsername} />
                     </Route>
-                    <Route exact path='/user/:id'>
+                    <Route path='/user/:id'>
                         {
                             <User uname={this.state.username}/>
                         }
                     </Route>
-                    <Route exact path='/book/:id'>
+                    <Route path='/book/:id'>
                     {
                             this.LoginCheck()?<Book />:
                             <Redirect to='/login' />
                         }
                     </Route>
-                    <Route exact path='/publisher/:id'>
+                    <Route path='/publisher/:id'>
                     {
                             this.LoginCheck()?<Publisher uname={this.state.username}/>:
                             <Redirect to='/login' />
