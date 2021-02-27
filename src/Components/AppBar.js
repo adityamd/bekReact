@@ -18,7 +18,8 @@ class DefaultAppBar extends React.Component {
             heading: this.props.heading,
             menuState: false,
             MenuAnchor: null,
-            drawerState: false
+            drawerState: false,
+            loggedOut: false,
         };
         this.profileClicked = this.profileClicked.bind(this);
         this.profileClosed = this.profileClosed.bind(this);
@@ -34,6 +35,9 @@ class DefaultAppBar extends React.Component {
             }
         }).then(res => {console.log(res)});
         cookie.remove("AuthToken");
+        this.setState({
+            loggedOut: true
+        });
     }
 
     profileClosed(e) {
@@ -53,6 +57,7 @@ class DefaultAppBar extends React.Component {
 
     render() {
         return (
+            this.state.loggedOut?<Redirect to="/login" />:(
             <div className="root">
                 <AppBar position="fixed">
                     <Toolbar>
@@ -75,6 +80,7 @@ class DefaultAppBar extends React.Component {
                     </Toolbar>
                 </AppBar>
             </div>
+            )
         );
     }
 }
