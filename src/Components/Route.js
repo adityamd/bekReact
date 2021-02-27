@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import {Switch, Route, Redirect, Router} from "react-router-dom";
+import {Switch, Route, Redirect, BrowserRouter as Router} from "react-router-dom";
 import Cookies from "universal-cookie";
 
 import Publisher from './Publisher'
