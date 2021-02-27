@@ -79,21 +79,17 @@ class Routing extends React.Component{
                     </Route>
                     <Route exact path='/user/:id'>
                         {
-                            (this.LoginCheck())?(<User uname={this.state.username} />):
-                                (
-                                    <p>{this.state.username}</p>)
+                            <User uname={this.state.username} />
                         }
                     </Route>
                     <Route exact path='/book/:id'>
-                    {
-                            this.LoginCheck()?<Book />:
-                            <Redirect to='/login' />
+                        {
+                            <Book />
                         }
                     </Route>
                     <Route exact path='/publisher/:id'>
-                    {
-                            this.LoginCheck()?<Publisher uname={this.state.username}/>:
-                            <Redirect to='/login' />
+                        {
+                            <Publisher uname={this.state.username}/>
                         }
                     </Route>
                 </Switch>
