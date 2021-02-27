@@ -47,7 +47,6 @@ class Routing extends React.Component{
         }).then(res => {
             console.log(res);
             return true;
-            console.log("E");
         }).catch(res=>{return false});
     }
 
@@ -63,12 +62,6 @@ class Routing extends React.Component{
         return (
             <Router>
                 <Switch>
-                    <Route exact path='/'>
-                        {
-                            this.LoginCheck()?(this.isPublisher?<User uname={this.state.username}/>:<Publisher uname={this.state.username} />):
-                            <Redirect to='/login' />
-                        }
-                    </Route>
                     <Route exact path='/login'>
                         <Login targetUsername={this.changeUsername} />
                     </Route>
