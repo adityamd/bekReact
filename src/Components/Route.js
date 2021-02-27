@@ -14,7 +14,7 @@ class Routing extends React.Component{
         this.state= {
             username: "",
             loggedIn: false,
-            child: null
+            child: <Login targetUsername={this.changeUsername} />
         }
         this.changeUsername = this.changeUsername.bind(this);
     }
@@ -67,6 +67,7 @@ class Routing extends React.Component{
     render(){
         return (
             <Router>
+                {this.state.child}
                 <Switch>
                     <Route exact path='/'>
                         {
