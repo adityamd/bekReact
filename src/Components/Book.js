@@ -65,7 +65,6 @@ class Book extends React.Component {
                 language: res.data[0].lang,
                 genre: res.data[0].genre
             })
-            console.log(res.data);
             axios.get(`https://bharatekkhoj.herokuapp.com/api/pubs/id/${id}`,{
                 headers:{
                     "Authorization": "Token "+ cookie.get("BackendToken")
@@ -74,14 +73,12 @@ class Book extends React.Component {
                 this.setState({
                     publisher: res.data[0].pub_name
                 });
-                console.log(res);
             
             axios.get(`https://bharatekkhoj.herokuapp.com/api/subscribes/check/${this.state.user}/${this.state.publisher}/`,{
                 headers:{
                     "Authorization": "Token "+ cookie.get("BackendToken")
                 }
             }).then(res => {
-                console.log(res.data);
                 this.setState({
                     subscribed: res.data.subscribe
                 })
@@ -96,7 +93,6 @@ class Book extends React.Component {
                     "Authorization": "Token "+ cookie.get("BackendToken")
                 }
             }).then(res => {
-                console.log(res.data);
                 this.setState({
                     purchased: res.data.purchase
                 })

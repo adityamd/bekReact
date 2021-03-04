@@ -109,12 +109,8 @@ class LoginSignup extends React.Component {
                         }).then(res=>{
                             let cookie = new Cookies();
                             let s = res.data.token;
-                            console.log(dt.user.username);
                             cookie.set("BackendToken",s)
                             cookie.set("username",dt.user.username);
-                            console.log("Successfully Recieved Backend Token");
-                        console.log(res.data);
-                        console.log(cookie.get("BackendToken"));
                         axios.get(`https://bharatekkhoj.herokuapp.com/api/users/reader/${this.state.unameReader}/`,{
                             headers:{
                                 "Content-Type": "application/json",
@@ -124,12 +120,10 @@ class LoginSignup extends React.Component {
                             if(res.data === 1){
                                 let cookie = new Cookies();
                                 cookie.set("AuthToken",at);
-                                console.log(at);
                                 this.props.targetUsername(this.state.unameReader);
                                 this.setState({
                                     isLogged: true
                                 });
-                                console.log("AUTH SUCCESSFUL");
                             }
                             else{
                                 this.setState({
@@ -137,13 +131,11 @@ class LoginSignup extends React.Component {
                                 });
                             }
                         }).catch(res=>{
-                            console.log("HERE");
                             console.log(res.response.data);
                         })}).catch(res => {
                             console.log(res);
                         })
                     }).catch(() => {
-                        console.log("E");
                         this.setState({
                         userExists: "Incorrect username/password"
                     })});
@@ -164,16 +156,9 @@ class LoginSignup extends React.Component {
                         }).then(res=>{
                             let cookie = new Cookies();
                             let s = res.data.token;
-                            console.log(s);
                             cookie.remove("BackendToken");
-                            console.log(cookie);
                             cookie.set("BackendToken",s)
                             cookie.set("username",dt.user.username);
-                            console.log(cookie);
-                            console.log("Successfully Recieved Backend Token");
-                        console.log(res.data);
-                        console.log(cookie);
-                        console.log(cookie.get("BackendToken"));
                         axios.get(`https://bharatekkhoj.herokuapp.com/api/users/reader/${this.state.unamePublisher}/`,{
                             headers:{
                                 "Content-Type": "application/json",
@@ -183,12 +168,10 @@ class LoginSignup extends React.Component {
                             if(res.data === 0){
                                 let cookie = new Cookies();
                                 cookie.set("AuthToken",at);
-                                console.log(at);
                                 this.props.targetUsername(this.state.unamePublisher);
                                 this.setState({
                                     isLogged: true
                                 });
-                                console.log("AUTH SUCCESSFUL");
                             }
                             else{
                                 this.setState({
@@ -196,7 +179,6 @@ class LoginSignup extends React.Component {
                                 });
                             }
                         }).catch(res=>{
-                            console.log("HERE");
                             console.log(res.response);
                         })}).catch(res => {
                             console.log(res);
@@ -212,7 +194,6 @@ class LoginSignup extends React.Component {
                 this.setState({
                     userExists: ""
                 });
-                console.log(this.state.unameReader + " " + this.state.emailReader + this.state.pwdReader);
                 axios.post(`https://bharatekkhoj.herokuapp.com/auth/dj-rest-auth/registration/`,{
                     username:this.state.unameReader,
                     password1:this.state.pwdReader,

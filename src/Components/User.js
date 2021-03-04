@@ -44,7 +44,6 @@ class User extends React.Component {
 
     componentDidMount() {
         var cookie = new Cookies();
-        console.log(this.state.username);
         axios.get(`https://bharatekkhoj.herokuapp.com/api/books/`,{
             headers:{
                 "Authorization": "Token "+ cookie.get("BackendToken")
@@ -99,7 +98,6 @@ class User extends React.Component {
             this.setState({
                 booksSubscribed: res.data
             });
-            console.log(res.data)
         }).catch(res=>{
             this.setState({
                 redirectLogin: true
@@ -127,6 +125,10 @@ class User extends React.Component {
             book: this.state.bookReviewed,
             review: this.state.reviewValue,
             date_posted: d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate()
+        },{
+            headers:{
+                "Authorization": "Token "+ cookie.get("BackendToken")
+            }
         }).then(res => { console.log(res); }).catch(res=>{
             this.setState({
                 redirectLogin: true
