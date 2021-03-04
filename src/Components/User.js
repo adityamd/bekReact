@@ -3,7 +3,7 @@ import axios from 'axios'
 
 import Layout from './Layout'
 import SimpleCard from './BookCard'
-import {Link} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 
 import Accordion from '@material-ui/core/Accordion'
 import AccordionSummary from '@material-ui/core/AccordionSummary'
@@ -16,20 +16,24 @@ import Snackbar from '@material-ui/core/Snackbar'
 import Alert from '@material-ui/lab/Alert'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextareaAutosize } from '@material-ui/core'
+import Cookies from 'universal-cookie';
 
 class User extends React.Component {
 
     constructor(props) {
         super(props);
+        let cookie = new Cookies();
         this.state = ({
-            username: this.props.uname,
+            username: cookie.get("username"),
             subscribers: [],
             booksPublishers: [],
             booksSubscribed: [],
+            exploreBooks: [],
             writeReview: false,
             reviewValue: "",
             bookReviewed: "",
-            posted: false
+            posted: false,
+            redirectLogin: false
         });
         this.writeReview = this.writeReview.bind(this);
         this.closeDialog = this.closeDialog.bind(this);
@@ -39,13 +43,33 @@ class User extends React.Component {
     }
 
     componentDidMount() {
+        var cookie = new Cookies();
         console.log(this.state.username);
-        axios.get(`https://bharatekkhoj.herokuapp.com/api/subscribes/${this.state.username}`).then(res => {
+        axios.get(`https://bharatekkhoj.herokuapp.com/api/books/`,{
+            headers:{
+                "Authorization": "Token "+ cookie.get("BackendToken")
+            }
+        }).then(res => {
+            this.setState({
+                exploreBooks: res.data
+            });
+        }).catch(res => {
+            console.log(res.response);
+        })
+        axios.get(`https://bharatekkhoj.herokuapp.com/api/subscribes/${this.state.username}`,{
+            headers:{
+                "Authorization": "Token "+ cookie.get("BackendToken")
+            }
+        }).then(res => {
             this.setState({
                 subscribers: res.data
             });
             for (let i = 0; i < this.state.subscribers.length; i++) {
-                axios.get(`https://bharatekkhoj.herokuapp.com/api/books/pubs/i/${this.state.subscribers[i].publisher}`).then(
+                axios.get(`https://bharatekkhoj.herokuapp.com/api/books/pubs/i/${this.state.subscribers[i].publisher}`,{
+                    headers:{
+                        "Authorization": "Token "+ cookie.get("BackendToken")
+                    }
+                }).then(
                     res => {
                         var publishes=[];
                         publishes = publishes.concat(res.data);
@@ -55,16 +79,32 @@ class User extends React.Component {
                         });
                         console.log(this.state.booksPublishers);
                     }
-                );
+                ).catch(res=>{
+                    this.setState({
+                        redirectLogin: true
+                    });
+                });;
             }
-        })
+        }).catch(res=>{
+            this.setState({
+                redirectLogin: true
+            });
+        });
 
-        axios.get(`https://bharatekkhoj.herokuapp.com/api/purchases/${this.state.username}/`).then(res => {
+        axios.get(`https://bharatekkhoj.herokuapp.com/api/purchases/${this.state.username}/`,{
+            headers:{
+                "Authorization": "Token "+ cookie.get("BackendToken")
+            }
+        }).then(res => {
             this.setState({
                 booksSubscribed: res.data
             });
             console.log(res.data)
-        })
+        }).catch(res=>{
+            this.setState({
+                redirectLogin: true
+            });
+        });
     }
 
     closeAlert(e) {
@@ -87,7 +127,11 @@ class User extends React.Component {
             book: this.state.bookReviewed,
             review: this.state.reviewValue,
             date_posted: d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate()
-        }).then(res => { console.log(res); });
+        }).then(res => { console.log(res); }).catch(res=>{
+            this.setState({
+                redirectLogin: true
+            });
+        });
 
         this.setState({
             reviewValue: "",
@@ -112,14 +156,67 @@ class User extends React.Component {
 
     render() {
         return (
+            (this.state.redirectLogin)?(<Redirect to='/login' />):(
+
             <div>
                 <Layout AppBarHeading="User" AppBarChild={(
                     <div>
+                        <Button href="#exploreBooks" style={{color:"white"}}>Explore books</Button>
                         <Button href="#otherBooks" style={{color:"white"}}>More books</Button>
                         <Button href="#purchasedBooks" style={{ color: "white" }}>Purchased books</Button>
                     </div>
                     )} heading={"Hi, " + this.state.username} >
-                    <Container style={{ width: 10000 }} id="otherBooks">
+                    
+                    <Container style={{ width: 10000 }} id="exploreBooks">
+                        <Accordion defaultExpanded>
+                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                <Typography variant="h6">
+                                    Explore books
+                                </Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <Grid container spacing={2}>
+                                    {
+                                        this.state.exploreBooks.map(publish => {
+                                            return (
+                                                <Grid item lg={3} key={publish.id}>
+                                                    <SimpleCard csName="crd" TooltipText={publish.bname}
+                                                        TooltipPlacement="top-start"
+                                                        style={{ marginTop: 15 }}
+                                                        book_name={publish.bname} price={publish.price} genre={publish.genre}
+                                                        language={publish.language}
+                                                    >
+                                                        <Typography variant="h5" component="h2" noWrap>
+                                                            {publish.bname}
+                                                        </Typography>
+                                                        <Typography color="textSecondary">
+                                                            Price: Rs.{publish.price}
+                                                        </Typography>
+                                                        <Typography variant="body2" component="p">
+                                                            Genre: {publish.genre}
+                                                            <br />
+                                                            Language: {publish.lang}
+                                                        </Typography>
+                                                        <Link to={"/book/" + publish.bname} >
+                                                            <Button color="primary" style={{ marginTop: 20 }} variant="contained"
+                                                                onClick={(nm) => {
+                                                                    let cookie = new Cookies();
+                                                                    cookie.set("bname",publish.bname)
+                                                                    }}>
+                                                                View
+                                                            </Button>
+                                                        </Link>
+                                                    </SimpleCard>
+                                                </Grid>
+                                            );
+                                        })
+                                    }
+                                </Grid>
+                            </AccordionDetails>
+                        </Accordion>
+                    </Container>
+
+                    <Container style={{ marginTop: 40 ,width: 10000 }} id="otherBooks">
                         <Accordion defaultExpanded>
                             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                                 <Typography variant="h6">
@@ -228,6 +325,7 @@ class User extends React.Component {
                     </Alert>
                 </Snackbar>
             </div>
+            )
         );
     }
 }

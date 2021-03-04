@@ -29,13 +29,16 @@ class DefaultAppBar extends React.Component {
 
     logout(e){
         let cookie = new Cookies();
-        let s= cookie.get("AuthToken");
-        axios.post('https://bharatekkhoj.herokuapp.com/api/auth/logout',{},{
+        let s= cookie.get("BackendToken");
+        axios.post('https://bharatekkhoj.herokuapp.com/auth/dj-rest-auth/logout/',{},{
             headers:{
                 "Authorization": "Token "+s
             }
         }).then(res => {console.log(res)});
         cookie.remove("AuthToken");
+        console.log(cookie.get("BackendToken"));
+        cookie.remove("BackendToken");
+        console.log(cookie.get("BackendToken"));
         this.setState({
             loggedOut: true
         });

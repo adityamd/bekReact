@@ -13,9 +13,11 @@ class Routing extends React.Component{
         super(props);
         this.state= {
             username: "",
+            bname: "",
             loggedIn: false,
         }
         this.changeUsername = this.changeUsername.bind(this);
+        this.changeBookname = this.changeBookname.bind(this);
     }
 
     // componentDidMount(){
@@ -34,28 +36,38 @@ class Routing extends React.Component{
         });
     }
 
+    changeBookname(name){
+        this.setState({
+            bname: name
+        });
+    }
+
     LoginCheck(){
         let cookie=new Cookies();
         if(cookie.get("AuthToken")===undefined)
             return false;
         console.log(cookie.get("AuthToken"));
         let s = cookie.get("AuthToken");
+        console.log(s);
         let p=0;
-        axios.get('https://bharatekkhoj.herokuapp.com/api/auth/user',{
-            headers:{
-                "Authorization":"Token " + s
-            }
-        }).then(res => {
-            p=res.data
-            console.log(p);
-        }).catch();
-        if(p===0){
-            console.log("HERE");
-            return false;
+        axios.post('https://bharatekkhoj.herokuapp.com/auth/dj-rest-auth/token/verify/',{
+                "token":s
         }
-        return true;
+        ).then(res => {
+            p=1;
+            console.log("AUTHENTICATION SUCCESSFUL");
+            console.log(p);
+            this.setState({
+                loggedIn: true
+            })
+        }).catch(res=>{
+            console.log(res.response);
+            this.setState({
+                loggedIn: false
+            })
+        });
     }
-
+    
     isPublisher(){
         axios.get(`https://bharatekkhoj.herokuapp.com/api/users/reader/${this.state.username}/`).then(res=>{
             if(res.data===1)
@@ -69,28 +81,19 @@ class Routing extends React.Component{
             <Router>
                 <Switch>
                     <Route exact path='/'>
-                        {
-                            this.LoginCheck()?(this.isPublisher?<User uname={this.state.username}/>:<Publisher uname={this.state.username} />):
-                            <Redirect to='/login' />
-                        }
+                        <Redirect to='/login' />
                     </Route>
                     <Route exact path='/login'>
                         <Login targetUsername={this.changeUsername} />
                     </Route>
                     <Route exact path='/user/:id'>
-                        {
-                            <User uname={this.state.username} />
-                        }
+                        <User uname={this.state.username} targetBookname={this.changeBookname}/>
                     </Route>
                     <Route exact path='/book/:id'>
-                        {
-                            <Book />
-                        }
+                        <Book bname = {this.state.bname}/>
                     </Route>
                     <Route exact path='/publisher/:id'>
-                        {
-                            <Publisher uname={this.state.username}/>
-                        }
+                        <Publisher uname={this.state.username}/>
                     </Route>
                 </Switch>
             </Router>

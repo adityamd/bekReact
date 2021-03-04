@@ -13,7 +13,11 @@ class ListView extends React.Component {
     }
 
     componentDidMount() {
-        axios.get(`http://bharatekkhoj.herokuapp.com/api/warehouses/`).then(res => {
+        axios.get(`https://bharatekkhoj.herokuapp.com/api/warehouses/`,{
+            headers:{
+                "Authorization": "Token "+ cookie.get("BackendToken")
+            }
+        }).then(res => {
             this.setState({
                 list: res.data.map(warehouse => { return warehouse["location"]})
             });
@@ -22,8 +26,12 @@ class ListView extends React.Component {
 
     onSubmit(e) {
         e.preventDefault();
-        axios.post(`http://bharatekkhoj.herokuapp.com/api/warehouses/add/`,
-            { location: this.state.name }).
+        axios.post(`https://bharatekkhoj.herokuapp.com/api/warehouses/add/`,
+            { location: this.state.name },{
+                headers:{
+                    "Authorization": "Token "+ cookie.get("BackendToken")
+                }
+            }).
             then(res => { console.log(res); });
     }
 

@@ -20,13 +20,17 @@ import SimpleCard from './BookCard'
 import './Styles/Publisher.css'
 import ModalForm from './ModalForm'
 import Layout from './Layout'
+import { Redirect } from 'react-router-dom'
+import Cookies from 'universal-cookie'
 
 class Publisher extends React.Component {
     constructor(props) {
         super(props);
+        let cookie = new Cookies();
+        console.log(cookie.get("username"));
         this.state = {
             loaded: false,
-            publisher: this.props.uname,
+            publisher: cookie.get("username"),
             loadModal: false,
             publishes: [],
             book_name: "",
@@ -34,7 +38,8 @@ class Publisher extends React.Component {
             genre: "",
             language: "",
             openDialog: false,
-            openSnackbar: false
+            openSnackbar: false,
+            redirectLogin: false
         };
         this.onEdit = this.onEdit.bind(this);
         this.closeModal = this.closeModal.bind(this);
@@ -47,11 +52,20 @@ class Publisher extends React.Component {
     }
 
     componentDidMount() {
-        axios.get(`http://bharatekkhoj.herokuapp.com/api/books/pubs/${this.state.publisher}`).then(res => {
+        let cookie = new Cookies();
+        axios.get(`https://bharatekkhoj.herokuapp.com/api/books/pubs/${this.state.publisher}/`,{
+            headers:{
+                "Authorization": "Token "+ cookie.get("BackendToken")
+            }
+        }).then(res => {
             this.setState({
                 publishes: res.data,
                 loaded: true,
                 publicationId: "pub"
+            });
+        }).catch(res => {
+            this.setState({
+                redirectLogin: true
             });
         });
     }
@@ -77,8 +91,13 @@ class Publisher extends React.Component {
     }
 
     loadAgain() {
+        let cookie = new Cookies();
         console.log(this.state.publisher);
-        axios.get(`http://bharatekkhoj.herokuapp.com/api/books/pubs/${this.state.publisher}`).then(res => {
+        axios.get(`https://bharatekkhoj.herokuapp.com/api/books/pubs/${this.state.publisher}`,{
+            headers:{
+                "Authorization": "Token "+ cookie.get("BackendToken")
+            }
+        }).then(res => {
             this.setState({
                 publishes: res.data,
             });
@@ -99,12 +118,21 @@ class Publisher extends React.Component {
     }
 
     deletePublication(e, name) {
+        let cookie = new Cookies();
         console.log(this.state.book_name);
-        axios.get(`http://bharatekkhoj.herokuapp.com/api/books/delete/${this.state.book_name}`).then(res => { console.log(res); });
+        axios.get(`https://bharatekkhoj.herokuapp.com/api/books/delete/${this.state.book_name}.`,{
+            headers:{
+                "Authorization": "Token "+ cookie.get("BackendToken")
+            }
+        }).then(res => { console.log(res); });
         this.setState({
             openDialog: false
         });
-        axios.get(`http://bharatekkhoj.herokuapp.com/api/books/pubs/${this.state.publisher}`).then(res => {
+        axios.get(`https://bharatekkhoj.herokuapp.com/api/books/pubs/${this.state.publisher}/`,{
+            headers:{
+                "Authorization": "Token "+ cookie.get("BackendToken")
+            }
+        }).then(res => {
             this.setState({
                 publishes: res.data,
             });
@@ -133,6 +161,7 @@ class Publisher extends React.Component {
 
     render() {
         return (
+            this.state.redirectLogin?(<Redirect to='/login' />):(
             <div>
                 <Layout AppBarHeading='Publisher' AppBarChild={(
                     <Button href={'#pub'}>
@@ -217,7 +246,7 @@ class Publisher extends React.Component {
                     </Container>
                 </Layout>
             </div>
-        );
+        ));
     }
 }
 

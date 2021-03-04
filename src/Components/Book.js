@@ -16,25 +16,29 @@ import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket'
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import { Dialog, DialogContent, DialogActions, DialogContentText, DialogTitle, ListItem, TextField, Snackbar } from '@material-ui/core'
+import Cookies from 'universal-cookie'
+import { Redirect } from 'react-router-dom'
 
 class Book extends React.Component {
     constructor(props) {
         super(props);
+        let cookie = new Cookies();
         this.state = {
-            book_name: "Database Design",
-            publisher: "S.Chand",
-            price: 60,
-            genre: "Drama",
-            language: "Hindi",
+            book_name: cookie.get("bname"), 
+            publisher: "",
+            price: 0, 
+            genre: "", 
+            language: "", 
             synopsis: "This book is for both professionals and students who wish to make a career as a database designer or some related field. It talks about various databases, approaches regarding designing a database and maintaining it and lastly, talking about the future of databases.",
             reviews: [],
-            user: "adityamd",
-            subscribed: true,
+            user: cookie.get("username"),
+            subscribed: false, 
             reviewValue: "",
             openDialogBox: false,
             posted: false,
-            bookPurchased: false,
-            purchased: false
+            bookPurchased: false,   //to fill
+            purchased: false,
+            redirectLogin: false,
         };
         this.subscribed = this.subscribed.bind(this);
         this.addSubscription = this.addSubscription.bind(this);
@@ -49,10 +53,69 @@ class Book extends React.Component {
     }
 
     componentDidMount() {
-        axios.get(`http://bharatekkhoj.herokuapp.com/api/reviews/${this.state.book_name}/`).then(res => {
+        let cookie = new Cookies();
+        axios.get(`https://bharatekkhoj.herokuapp.com/api/books/${this.state.book_name}/`,{
+            headers:{
+                "Authorization": "Token "+ cookie.get("BackendToken")
+            }
+        }).then(res => {
+            let id=res.data[0].publisher;
+            this.setState({
+                price: res.data[0].price,
+                language: res.data[0].lang,
+                genre: res.data[0].genre
+            })
+            console.log(res.data);
+            axios.get(`https://bharatekkhoj.herokuapp.com/api/pubs/id/${id}`,{
+                headers:{
+                    "Authorization": "Token "+ cookie.get("BackendToken")
+                }
+            }).then(res => {
+                this.setState({
+                    publisher: res.data[0].pub_name
+                });
+                console.log(res);
+            
+            axios.get(`https://bharatekkhoj.herokuapp.com/api/subscribes/check/${this.state.user}/${this.state.publisher}/`,{
+                headers:{
+                    "Authorization": "Token "+ cookie.get("BackendToken")
+                }
+            }).then(res => {
+                console.log(res.data);
+                this.setState({
+                    subscribed: res.data.subscribe
+                })
+            }).catch(res => {
+                console.log(res.response);
+            });
+            }).catch(res => {
+                console.log(res.response);
+            });
+            axios.get(`https://bharatekkhoj.herokuapp.com/api/purchases/check/${this.state.user}/${this.state.book_name}/`,{
+                headers:{
+                    "Authorization": "Token "+ cookie.get("BackendToken")
+                }
+            }).then(res => {
+                console.log(res.data);
+                this.setState({
+                    purchased: res.data.purchase
+                })
+            }).catch(res => {
+                console.log(res.response);
+            });
+        });
+        axios.get(`https://bharatekkhoj.herokuapp.com/api/reviews/${this.state.book_name}/`,{
+            headers:{
+                "Authorization": "Token "+ cookie.get("BackendToken")
+            }
+        }).then(res => {
             this.setState({
                 reviews: res.data
             });
+        }).catch(res => {
+            this.setState({
+                redirectLogin: true
+            })
         });
     }
 
@@ -63,22 +126,39 @@ class Book extends React.Component {
     }
 
     addSubscription() {
-        axios.post(`http://bharatekkhoj.herokuapp.com/api/subscribes/add/publisher/`, {
+        let cookie = new Cookies();
+        axios.post(`https://bharatekkhoj.herokuapp.com/api/subscribes/add/publisher/`, {
             users: this.state.user,
             publisher: this.state.publisher
-        }).then(res => { console.log(res); });
+        },{
+            headers:{
+                "Authorization": "Token "+ cookie.get("BackendToken")
+            }
+        }).then(res => { console.log(res); }).catch(res => {
+            console.log(res.data);
+        });
     }
 
     deleteSubscription() {
-        axios.get(`http://bharatekkhoj.herokuapp.com/api/subscribes/delete/${this.state.user}/${this.state.publisher}/`).then(
+        let cookie = new Cookies();
+        axios.get(`https://bharatekkhoj.herokuapp.com/api/subscribes/delete/${this.state.user}/${this.state.publisher}/`,{
+            headers:{
+                "Authorization": "Token "+ cookie.get("BackendToken")
+            }
+        }).then(
             res => { console.log(res);}
         );
     }
 
     purchaseBook(e) {
-        axios.post(`http://bharatekkhoj.herokuapp.com/api/purchases/added/p`, {
+        let cookie = new Cookies();
+        axios.post(`https://bharatekkhoj.herokuapp.com/api/purchases/added/p`, {
             user: this.state.user,
             book: this.state.book_name
+        },{
+            headers:{
+                "Authorization": "Token "+ cookie.get("BackendToken")
+            }
         }).then(res => {
             console.log(res);
             this.setState({
@@ -88,12 +168,17 @@ class Book extends React.Component {
     }
 
     postReview(e) {
+        let cookie = new Cookies();
         var d = new Date();
-        axios.post(`http://bharatekkhoj.herokuapp.com/api/reviews/add/`,{
+        axios.post(`https://bharatekkhoj.herokuapp.com/api/reviews/add/`,{
             user:  this.state.user ,
             book: this.state.book_name,
             review: this.state.reviewValue,
             date_posted: d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate()
+        },{
+            headers:{
+                "Authorization": "Token "+ cookie.get("BackendToken")
+            }
         }).then(res => { console.log(res); });
 
         this.setState({
@@ -101,7 +186,11 @@ class Book extends React.Component {
             posted: true
         });
 
-        axios.get(`http://bharatekkhoj.herokuapp.com/api/reviews/${this.state.book_name}/`).then(res => {
+        axios.get(`https://bharatekkhoj.herokuapp.com/api/reviews/${this.state.book_name}/`,{
+            headers:{
+                "Authorization": "Token "+ cookie.get("BackendToken")
+            }
+        }).then(res => {
             this.setState({
                 reviews: res.data
             });
@@ -152,6 +241,7 @@ class Book extends React.Component {
 
     render() {
         return (
+            this.state.redirectLogin?<Redirect to='/login' />:(
             <div>
                 <Layout AppBarHeading="Book" AppBarChild={null}>
                     <Grid container spacing={3}>
@@ -269,7 +359,7 @@ class Book extends React.Component {
                     </Alert>
                 </Snackbar>
             </div>
-        );
+        ));
     }
 }
 
