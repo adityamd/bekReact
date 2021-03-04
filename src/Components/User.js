@@ -168,7 +168,7 @@ class User extends React.Component {
                         <Button href="#otherBooks" style={{color:"white"}}>More books</Button>
                         <Button href="#purchasedBooks" style={{ color: "white" }}>Purchased books</Button>
                     </div>
-                    )} heading={"Hi, " + this.state.username} >
+                    )} heading={"Hi, " + this.state.username} home={"/user/"+this.state.username}>
                     
                     <Container style={{ width: 10000 }} id="exploreBooks">
                         <Accordion defaultExpanded>

@@ -119,16 +119,15 @@ class Publisher extends React.Component {
 
     deletePublication(e, name) {
         let cookie = new Cookies();
-        console.log(this.state.book_name);
-        axios.get(`https://bharatekkhoj.herokuapp.com/api/books/delete/${this.state.book_name}.`,{
+        axios.get(`https://bharatekkhoj.herokuapp.com/api/books/delete/${this.state.book_name}`,{
             headers:{
                 "Authorization": "Token "+ cookie.get("BackendToken")
             }
-        }).then(res => { console.log(res); });
+        }).then(res => { console.log(res); }).catch(res => {console.log(res.response);});
         this.setState({
             openDialog: false
         });
-        axios.get(`https://bharatekkhoj.herokuapp.com/api/books/pubs/${this.state.publisher}/`,{
+        axios.get(`https://bharatekkhoj.herokuapp.com/api/books/pubs/${this.state.publisher}`,{
             headers:{
                 "Authorization": "Token "+ cookie.get("BackendToken")
             }

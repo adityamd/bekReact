@@ -21,6 +21,7 @@ class DefaultAppBar extends React.Component {
             MenuAnchor: null,
             drawerState: false,
             loggedOut: false,
+            goBack:false
         };
         this.profileClicked = this.profileClicked.bind(this);
         this.profileClosed = this.profileClosed.bind(this);
@@ -62,11 +63,20 @@ class DefaultAppBar extends React.Component {
     render() {
         return (
             this.state.loggedOut?<Redirect to="/login" />:(
+            
+                this.state.goBack?(<Redirect to={this.props.home} />):(
+            
             <div className="root">
                 <AppBar position="fixed">
                     <Toolbar>
                         <Typography variant="h5" className="title">
-                            { this.state.heading}
+                            <Button style={{color:"white"}} size='large' onClick={()=>{
+                                this.setState({
+                                    goBack: true
+                                })
+                            }}>
+                                Gyaani Baba
+                            </Button>
                         </Typography>
                         <div style={{ position: "fixed", right: 100, display: "flex" }}>
                             {this.props.child}
@@ -84,7 +94,7 @@ class DefaultAppBar extends React.Component {
                     </Toolbar>
                 </AppBar>
             </div>
-            )
+            ))
         );
     }
 }

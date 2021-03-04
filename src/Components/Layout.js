@@ -9,7 +9,7 @@ class Layout extends React.Component {
     render() {
         return (
             <div>
-                <DefaultAppBar heading={this.props.AppBarHeading} child={this.props.AppBarChild} />
+                <DefaultAppBar heading={this.props.AppBarHeading} child={this.props.AppBarChild} home={this.props.home}/>
                 <Typography variant="h2" align="center" color="textPrimary" className="heading">
                     {this.props.heading}
                 </Typography>

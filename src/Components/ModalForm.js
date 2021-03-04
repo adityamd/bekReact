@@ -11,6 +11,11 @@ import IconButton from '@material-ui/core/IconButton'
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import PublishIcon from '@material-ui/icons/Publish';
 import Grid from '@material-ui/core/Grid';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
 
 import "./Styles/ModalForm.css"
 import Cookies from 'universal-cookie'
@@ -23,14 +28,15 @@ class ModalForm extends React.Component {
             price: this.props.price,
             genre: this.props.genre,
             language: this.props.language,
-            publisher: this.props.publisher
+            publisher: this.props.publisher,
+            openDialog: false
         };
         this.titleChanged = this.titleChanged.bind(this);
         this.priceChanged = this.priceChanged.bind(this);
         this.genreChanged = this.genreChanged.bind(this);
         this.languageChanged = this.languageChanged.bind(this);
-        this.modalEntered = this.modalEntered.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+        this.onCloseDialog = this.onCloseDialog.bind(this);
     }
 
     titleChanged(e) {
@@ -61,7 +67,6 @@ class ModalForm extends React.Component {
     onSubmit(e) {
         let cookie = new Cookies();
         if (this.props.canUpdate) {
-            console.log(this.state.book_name+" " + this.props.book_name);
             axios.post(`https://bharatekkhoj.herokuapp.com/api/books/update/${this.props.book_name}`, {
                 bname: this.state.book_name,
                 price: this.state.price,
@@ -73,7 +78,11 @@ class ModalForm extends React.Component {
                     "Authorization": "Token "+ cookie.get("BackendToken")
                 }
             })
-                .then(res => { console.log(res); });
+                .then(res => { console.log(res); }).catch(res => {
+                    this.setState({
+                        openDialog: true
+                    });
+                });;
         }
         else {
             axios.post(`https://bharatekkhoj.herokuapp.com/api/books/add/${this.state.publisher}`, {
@@ -87,18 +96,26 @@ class ModalForm extends React.Component {
                     "Authorization": "Token "+ cookie.get("BackendToken")
                 }
             })
-                .then(res => { console.log(res); });
+                .then(res => { console.log(res); }).catch(res => {
+                    this.setState({
+                        openDialog: true
+                    });
+                });
         }
         this.props.onClose();
         this.props.openSnackbar();
         this.props.loadAgain();
     }
 
-    modalEntered(e) {
+    onCloseDialog(e){
+        this.setState({
+            openDialog: false
+        });
     }
 
     render() {
         return (
+            <div>
             <Modal open={this.props.open} onClose={this.props.onClose}
                 style={{
                     backgroundColor: "white", height: 300,
@@ -154,6 +171,17 @@ class ModalForm extends React.Component {
                     </form>
                 </div>
             </Modal>
+            <Dialog open={this.state.openDialog} onClose={this.onCloseDialog}>
+            <DialogTitle>Error adding/updating the book</DialogTitle>
+            <DialogContent>
+                <DialogContentText>Sorry! Could not add/update the book</DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Button color="secondary" onClick={this.onCloseDialog}>Cancel</Button>
+            </DialogActions>
+        </Dialog>
+
+        </div>
         );
     }
 }

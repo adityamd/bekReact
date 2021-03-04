@@ -59,6 +59,7 @@ class Book extends React.Component {
                 "Authorization": "Token "+ cookie.get("BackendToken")
             }
         }).then(res => {
+            console.log(res.data);
             let id=res.data[0].publisher;
             this.setState({
                 price: res.data[0].price,
@@ -239,7 +240,7 @@ class Book extends React.Component {
         return (
             this.state.redirectLogin?<Redirect to='/login' />:(
             <div>
-                <Layout AppBarHeading="Book" AppBarChild={null}>
+                <Layout AppBarHeading="Book" AppBarChild={null} home={"/user/"+this.state.user}>
                     <Grid container spacing={3}>
                         <Grid item lg={4} sm={12} alignContent="center">
                             <Typography variant="h4">
