@@ -6,6 +6,9 @@ import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import PersonOutlineTwoToneIcon from '@material-ui/icons/PersonOutlineTwoTone';
+import Cookies from 'universal-cookie';
+import {Redirect} from "react-router-dom";
+import axios from "axios";
 
 import './Styles/AppBar.css'
 
@@ -16,10 +19,29 @@ class DefaultAppBar extends React.Component {
             heading: this.props.heading,
             menuState: false,
             MenuAnchor: null,
-            drawerState: false
+            drawerState: false,
+            loggedOut: false,
         };
         this.profileClicked = this.profileClicked.bind(this);
         this.profileClosed = this.profileClosed.bind(this);
+        this.logout = this.logout.bind(this);
+    }
+
+    logout(e){
+        let cookie = new Cookies();
+        let s= cookie.get("BackendToken");
+        axios.post('https://bharatekkhoj.herokuapp.com/auth/dj-rest-auth/logout/',{},{
+            headers:{
+                "Authorization": "Token "+s
+            }
+        }).then(res => {console.log(res)});
+        cookie.remove("AuthToken");
+        console.log(cookie.get("BackendToken"));
+        cookie.remove("BackendToken");
+        console.log(cookie.get("BackendToken"));
+        this.setState({
+            loggedOut: true
+        });
     }
 
     profileClosed(e) {
@@ -39,6 +61,7 @@ class DefaultAppBar extends React.Component {
 
     render() {
         return (
+            this.state.loggedOut?<Redirect to="/login" />:(
             <div className="root">
                 <AppBar position="fixed">
                     <Toolbar>
@@ -56,11 +79,12 @@ class DefaultAppBar extends React.Component {
                             anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
                             transformOrigin={{ vertical: "top", horizontal: "center" }}
                         >
-                            <MenuItem>Logout</MenuItem>
+                            <MenuItem onClick={this.logout}>Logout</MenuItem>
                         </Menu>
                     </Toolbar>
                 </AppBar>
             </div>
+            )
         );
     }
 }

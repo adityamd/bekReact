@@ -13,6 +13,7 @@ import PublishIcon from '@material-ui/icons/Publish';
 import Grid from '@material-ui/core/Grid';
 
 import "./Styles/ModalForm.css"
+import Cookies from 'universal-cookie'
 
 class ModalForm extends React.Component {
     constructor(props) {
@@ -58,24 +59,33 @@ class ModalForm extends React.Component {
 
 
     onSubmit(e) {
+        let cookie = new Cookies();
         if (this.props.canUpdate) {
             console.log(this.state.book_name+" " + this.props.book_name);
-            axios.post(`http://bharatekkhoj.herokuapp.com/api/books/update/${this.props.book_name}`, {
+            axios.post(`https://bharatekkhoj.herokuapp.com/api/books/update/${this.props.book_name}`, {
                 bname: this.state.book_name,
                 price: this.state.price,
                 genre: this.state.genre,
                 lang: this.state.language,
                 publisher: this.state.publisher
+            },{
+                headers:{
+                    "Authorization": "Token "+ cookie.get("BackendToken")
+                }
             })
                 .then(res => { console.log(res); });
         }
         else {
-            axios.post(`http://bharatekkhoj.herokuapp.com/api/books/add/${this.state.publisher}`, {
+            axios.post(`https://bharatekkhoj.herokuapp.com/api/books/add/${this.state.publisher}`, {
                 bname: this.state.book_name,
                 price: this.state.price,
                 genre: this.state.genre,
                 lang: this.state.language,
                 publisher: this.state.publisher
+            },{
+                headers:{
+                    "Authorization": "Token "+ cookie.get("BackendToken")
+                }
             })
                 .then(res => { console.log(res); });
         }
