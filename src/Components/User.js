@@ -120,6 +120,7 @@ class User extends React.Component {
 
     postReview(e) {
         var d = new Date();
+        let cookie = new Cookies();
         axios.post(`https://bharatekkhoj.herokuapp.com/api/reviews/add/`, {
             user: this.state.username,
             book: this.state.bookReviewed,
